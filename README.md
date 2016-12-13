@@ -2,7 +2,7 @@
 
 **Welcome to the Microsoft Drivers for PHP for SQL Server PHP 7 on Windows**
 
-https://travis-ci.org/bob1913/msphpsql.svg?branch=PHP-7.0-Linux
+<img src="https://travis-ci.org/bob1913/msphpsql.svg?branch=PHP-7.0-Linux"/>
 
 **Note:** For the PHP 5 project, see the PHP 5 branch, and for Linux project, see PHP 7.0-Linux branch.
 
