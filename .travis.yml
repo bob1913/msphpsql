@@ -58,7 +58,7 @@ before_script:
 script: 
   - cat dummy.txt
   - docker ps -a 
-  - docker run -w /REPO/msphpsql-PHP-7.0-Linux/ --link sql --name=client_pdo msphpsql-dev php ./source/sqlsrv/run-tests.php ./test/pdo_sqlsrv/*.phpt
+  - docker run -w /REPO/msphpsql-PHP-7.0-Linux/ --link sql --name=client_pdo msphpsql-dev php ./source/pdo_sqlsrv/run-tests.php ./test/pdo_sqlsrv/*.phpt
   - docker run -w /REPO/msphpsql-PHP-7.0-Linux/ --link sql --name=client_sqlsrv msphpsql-dev php ./source/sqlsrv/run-tests.php ./test/sqlsrv/*.phpt
   - docker ps -a 
 #  - ./source/buildtest.sh

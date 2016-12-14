@@ -5,17 +5,18 @@ FROM ubuntu:16.04
 # Update Ubuntu Software repository
 RUN export DEBIAN_FRONTEND=noninteractive && apt-get update && \
 	apt-get -y install \
-	libxml2-dev \
-	gcc	\
-	g++ \
-	autoconf \
-	curl \
-	make \
-	locales \
 	apt-transport-https	 \
 	apt-utils \
+	autoconf \
+	curl \
+	gcc	\
+	g++ \
+	libxml2-dev \
+	locales \
+	make \
 	php7.0	\	
 	php7.0-dev \
+	re2c \
 	unzip && apt-get clean
 	
 
@@ -35,30 +36,35 @@ RUN ACCEPT_EULA=Y apt-get install -y msodbcsql mssql-tools unixodbc-dev-utf16
 
 #Either Install git / download zip (One can see other strategies : https://ryanfb.github.io/etc/2015/07/29/git_strategies_for_docker.html )
 #Instead of installing git we are trying to get Source code from zip
-#replace with your repository/branch as appropriate
-RUN curl -sSL -o PHP-7.0-Linux.zip https://github.com/bob1913/msphpsql/archive/PHP-7.0-Linux.zip
-RUN unzip PHP-7.0-Linux.zip -d /REPO/
+#replace with your repository/branch as appropriate.
+# Download ZIP doesn't get PULL request
+#RUN curl -sSL -o PHP-7.0-Linux.zip https://github.com/bob1913/msphpsql/archive/PHP-7.0-Linux.zip
+#RUN unzip PHP-7.0-Linux.zip -d /REPO/
 
-WORKDIR /REPO/msphpsql-PHP-7.0-Linux/source/ 
+ENV PHPSQLDIR /REPO/msphpsql-PHP-7.0-Linux
+RUN mkdir -p $PHPSQLDIR
+COPY . $PHPSQLDIR
+
+WORKDIR $PHPSQLDIR/source/ 
 
 RUN /bin/bash -c "./packagize.sh"
 
 RUN echo "extension = pdo_sqlsrv.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 RUN echo "extension = sqlsrv.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
-RUN cat /REPO/msphpsql-PHP-7.0-Linux/dummy.txt
+RUN cat $PHPSQLDIR/dummy.txt
 
-WORKDIR /REPO/msphpsql-PHP-7.0-Linux/source/sqlsrv
+WORKDIR $PHPSQLDIR/source/sqlsrv
 RUN phpize && ./configure && make && make install
 
-WORKDIR /REPO/msphpsql-PHP-7.0-Linux/source/pdo_sqlsrv
+WORKDIR $PHPSQLDIR/source/pdo_sqlsrv
 RUN phpize && ./configure && make && make install
 
 # set name of sql server host to use: sql
-WORKDIR /REPO/msphpsql-PHP-7.0-Linux/test/pdo_sqlsrv
+WORKDIR $PHPSQLDIR/test/pdo_sqlsrv
 RUN sed -i -e 's/localhost/sql/g' autonomous_setup.php
 
-WORKDIR /REPO/msphpsql-PHP-7.0-Linux/test/sqlsrv
+WORKDIR $PHPSQLDIR/test/sqlsrv
 RUN sed -i -e 's/localhost/sql/g' autonomous_setup.php
 
 ENV REPORT_EXIT_STATUS 1
