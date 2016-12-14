@@ -25,6 +25,7 @@ env:
   - COMPILER=g++-5
   - REPORT_EXIT_STATUS=1
   - ACCEPT_EULA=Y
+  - PHPSQLDIR=/REPO/msphpsql-PHP-7.0-Linux
 
 before_install:
 #  - php --ini
@@ -48,7 +49,7 @@ install:
 #  - odbcinst -q -d -n "ODBC Driver 13 for SQL Server"
 #  - ldconfig -p | grep odbc
 #  - sqlcmd -?
-  - docker build -t msphpsql-dev -f Dockerfile-msphpsql .
+  - docker build --build-arg PHPSQLDIR=$PHPSQLDIR -t msphpsql-dev -f Dockerfile-msphpsql .
   - docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=<YourStrong!Passw0rd>' -p 1433:1433 --name=sql -d microsoft/mssql-server-linux
 
 before_script:
@@ -56,10 +57,9 @@ before_script:
 #  - echo "extension = sqlsrv.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 script: 
-  - cat dummy.txt
   - docker ps -a 
-  - docker run -w /REPO/msphpsql-PHP-7.0-Linux/ --link sql --name=client_pdo msphpsql-dev php ./source/pdo_sqlsrv/run-tests.php ./test/pdo_sqlsrv/*.phpt
-  - docker run -w /REPO/msphpsql-PHP-7.0-Linux/ --link sql --name=client_sqlsrv msphpsql-dev php ./source/sqlsrv/run-tests.php ./test/sqlsrv/*.phpt
+  - docker run -w $PHPSQLDIR --link sql --name=client_pdo msphpsql-dev php ./source/pdo_sqlsrv/run-tests.php ./test/pdo_sqlsrv/*.phpt
+  - docker run -w $PHPSQLDIR --link sql --name=client_sqlsrv msphpsql-dev php ./source/sqlsrv/run-tests.php ./test/sqlsrv/*.phpt
   - docker ps -a 
 #  - ./source/buildtest.sh
 #  - php -info

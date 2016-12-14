@@ -35,13 +35,13 @@ RUN apt-get update
 RUN ACCEPT_EULA=Y apt-get install -y msodbcsql mssql-tools unixodbc-dev-utf16
 
 #Either Install git / download zip (One can see other strategies : https://ryanfb.github.io/etc/2015/07/29/git_strategies_for_docker.html )
-#Instead of installing git we are trying to get Source code from zip
+#One option is to get source from zip file of repository.
 #replace with your repository/branch as appropriate.
-# Download ZIP doesn't get PULL request
 #RUN curl -sSL -o PHP-7.0-Linux.zip https://github.com/bob1913/msphpsql/archive/PHP-7.0-Linux.zip
 #RUN unzip PHP-7.0-Linux.zip -d /REPO/
 
-ENV PHPSQLDIR /REPO/msphpsql-PHP-7.0-Linux
+#another option is to copy source to build directory on image
+ARG PHPSQLDIR=/REPO/msphpsql-PHP-7.0-Linux
 RUN mkdir -p $PHPSQLDIR
 COPY . $PHPSQLDIR
 
@@ -51,8 +51,6 @@ RUN /bin/bash -c "./packagize.sh"
 
 RUN echo "extension = pdo_sqlsrv.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 RUN echo "extension = sqlsrv.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
-
-RUN cat $PHPSQLDIR/dummy.txt
 
 WORKDIR $PHPSQLDIR/source/sqlsrv
 RUN phpize && ./configure && make && make install
