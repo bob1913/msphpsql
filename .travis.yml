@@ -48,7 +48,7 @@ install:
 #  - odbcinst -q -d -n "ODBC Driver 13 for SQL Server"
 #  - ldconfig -p | grep odbc
 #  - sqlcmd -?
-  - docker build -t msphpsql-dev -f Dockerfile-msphpsql github.com/bob1913/docker
+  - docker build -t msphpsql-dev -f Dockerfile-msphpsql .
   - docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=<YourStrong!Passw0rd>' -p 1433:1433 --name=sql -d microsoft/mssql-server-linux
 
 before_script:
