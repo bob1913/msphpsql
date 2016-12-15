@@ -9,15 +9,17 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get update && \
 	apt-utils \
 	autoconf \
 	curl \
-	gcc	\
 	g++ \
+	gcc	\
+	genhtml \
 	git \
+	lcov \
 	libxml2-dev \
 	locales \
 	make \
 	php7.0	\	
 	php7.0-dev \
-	pip-install \
+	python-pip \
 	re2c \
 	unzip && apt-get clean
 	
