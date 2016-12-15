@@ -11,11 +11,13 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get update && \
 	curl \
 	gcc	\
 	g++ \
+	git \
 	libxml2-dev \
 	locales \
 	make \
 	php7.0	\	
 	php7.0-dev \
+	pip-install \
 	re2c \
 	unzip && apt-get clean
 	
@@ -25,14 +27,15 @@ RUN locale-gen en_US.UTF-8
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 #install ODBC driver
-
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
 RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
 #RUN echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/mssql-ubuntu-xenial-release/ xenial main" > /etc/apt/sources.list.d/mssqlpreview.list
 #RUN apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
-RUN apt-get update
 RUN ACCEPT_EULA=Y apt-get install -y msodbcsql mssql-tools unixodbc-dev-utf16
+
+#install coveralls
+RUN pip install --upgrade pip && pip install cpp-coveralls
 
 #Either Install git / download zip (One can see other strategies : https://ryanfb.github.io/etc/2015/07/29/git_strategies_for_docker.html )
 #One option is to get source from zip file of repository.
@@ -53,10 +56,10 @@ RUN echo "extension = pdo_sqlsrv.so" >> `php --ini | grep "Loaded Configuration"
 RUN echo "extension = sqlsrv.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 WORKDIR $PHPSQLDIR/source/sqlsrv
-RUN phpize && ./configure && make && make install
+RUN phpize && ./configure LDFLAGS="-lgcov" CXXFLAGS="-O0 --coverage" && make && make install
 
 WORKDIR $PHPSQLDIR/source/pdo_sqlsrv
-RUN phpize && ./configure && make && make install
+RUN phpize && ./configure LDFLAGS="-lgcov" CXXFLAGS="-O0 --coverage" && make && make install
 
 # set name of sql server host to use: sql
 WORKDIR $PHPSQLDIR/test/pdo_sqlsrv

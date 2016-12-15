@@ -57,9 +57,12 @@ before_script:
 #  - echo "extension = sqlsrv.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 script: 
+  - docker run -t -d -w $PHPSQLDIR --link sql --name=client msphpsql-dev
   - docker ps -a 
-  - docker run -w $PHPSQLDIR --link sql --name=client_pdo msphpsql-dev php ./source/pdo_sqlsrv/run-tests.php ./test/pdo_sqlsrv/*.phpt
-  - docker run -w $PHPSQLDIR --link sql --name=client_sqlsrv msphpsql-dev php ./source/sqlsrv/run-tests.php ./test/sqlsrv/*.phpt
+  - docker exec client php ./source/pdo_sqlsrv/run-tests.php ./test/pdo_sqlsrv/*.phpt
+  - docker exec client php ./source/sqlsrv/run-tests.php ./test/sqlsrv/*.phpt
+  - docker exec coveralls --gcov-options '\-lp'
+  - docker stop client
   - docker ps -a 
 #  - ./source/buildtest.sh
 #  - php -info
