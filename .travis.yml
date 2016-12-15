@@ -26,6 +26,8 @@ env:
   - REPORT_EXIT_STATUS=1
   - ACCEPT_EULA=Y
   - PHPSQLDIR=/REPO/msphpsql-PHP-7.0-Linux
+  - SQLSERVERPASSWORD=<YourStrong!Passw0rd>
+  - SQLSERVERHOSTNAME=sql
 
 before_install:
 #  - php --ini
@@ -49,15 +51,15 @@ install:
 #  - odbcinst -q -d -n "ODBC Driver 13 for SQL Server"
 #  - ldconfig -p | grep odbc
 #  - sqlcmd -?
-  - docker build --build-arg PHPSQLDIR=$PHPSQLDIR -t msphpsql-dev -f Dockerfile-msphpsql .
-  - docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=<YourStrong!Passw0rd>' -p 1433:1433 --name=sql -d microsoft/mssql-server-linux
+  - docker build --build-arg PHPSQLDIR=$PHPSQLDIR --build-arg SQLSERVERPASSWORD=$SQLSERVERPASSWORD --build-arg SQLSERVERHOSTNAME=$SQLSERVERHOSTNAME -t msphpsql-dev -f Dockerfile-msphpsql .
+  - docker run -e 'ACCEPT_EULA=Y' -p 1433:1433 --name=$SQLSERVERHOSTNAME -d microsoft/mssql-server-linux
 
 before_script:
 #  - echo "extension = pdo_sqlsrv.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 #  - echo "extension = sqlsrv.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 script: 
-  - docker run -e TRAVIS_JOB_ID -t -d -w $PHPSQLDIR --link sql --name=client msphpsql-dev
+  - docker run -e TRAVIS_JOB_ID -t -d -w $PHPSQLDIR --link $SQLSERVERHOSTNAME --name=client msphpsql-dev
   - docker ps -a 
   - docker exec client php ./source/pdo_sqlsrv/run-tests.php ./test/pdo_sqlsrv/*.phpt
   - docker exec client php ./source/sqlsrv/run-tests.php ./test/sqlsrv/*.phpt

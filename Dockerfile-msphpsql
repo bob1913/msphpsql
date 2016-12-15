@@ -22,6 +22,9 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get update && \
 	re2c \
 	unzip && apt-get clean
 	
+ARG PHPSQLDIR=/REPO/msphpsql-PHP-7.0-Linux
+ARG SQLSERVERHOSTNAME=sql
+ARG SQLSERVERPASSWORD=<YourStrong!Passw0rd>
 
 # set locale to utf-8
 RUN locale-gen en_US.UTF-8
@@ -45,7 +48,6 @@ RUN pip install --upgrade pip && pip install cpp-coveralls
 #RUN unzip PHP-7.0-Linux.zip -d /REPO/
 
 #another option is to copy source to build directory on image
-ARG PHPSQLDIR=/REPO/msphpsql-PHP-7.0-Linux
 RUN mkdir -p $PHPSQLDIR
 COPY . $PHPSQLDIR
 
@@ -62,12 +64,14 @@ RUN phpize && ./configure LDFLAGS="-lgcov" CXXFLAGS="-O0 --coverage" && make && 
 WORKDIR $PHPSQLDIR/source/pdo_sqlsrv
 RUN phpize && ./configure LDFLAGS="-lgcov" CXXFLAGS="-O0 --coverage" && make && make install
 
-# set name of sql server host to use: sql
+# set name & SA password of sql server host to use
 WORKDIR $PHPSQLDIR/test/pdo_sqlsrv
-RUN sed -i -e 's/localhost/sql/g' autonomous_setup.php
+RUN sed -i -e 's/localhost/$SQLSERVERHOSTNAME/g' autonomous_setup.php
+RUN sed -i -e 's/<YourStrong!Passw0rd>/$SQLSERVERHOSTNAME/g' autonomous_setup.php
 
 WORKDIR $PHPSQLDIR/test/sqlsrv
-RUN sed -i -e 's/localhost/sql/g' autonomous_setup.php
+RUN sed -i -e 's/localhost/$SQLSERVERHOSTNAME/g' autonomous_setup.php
+RUN sed -i -e 's/<YourStrong!Passw0rd>/$SQLSERVERHOSTNAME/g' autonomous_setup.php
 
 ENV REPORT_EXIT_STATUS 1
 ENV TEST_PHP_EXECUTABLE /usr/bin/php
