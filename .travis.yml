@@ -26,7 +26,7 @@ env:
   - REPORT_EXIT_STATUS=1
   - ACCEPT_EULA=Y
   - PHPSQLDIR=/REPO/msphpsql-PHP-7.0-Linux
-  - SQLSERVERPASSWORD=<YourStrong!Passw0rd>
+  - SQLSERVERPASSWORD=YourStrong<>Passw0rd
   - SQLSERVERHOSTNAME=sql
 
 before_install:

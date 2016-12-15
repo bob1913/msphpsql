@@ -2,7 +2,7 @@
 	// Set SQL server + user + password
 	$serverName = getenv('MSSQL_SERVERNAME') ?: "localhost";
 	$username   = getenv('MSSQL_USERNAME') ?:   "sa";
-	$password   = getenv('MSSQL_PASSWORD') ?:   "<YourStrong!Passw0rd>";
+	$password   = getenv('MSSQL_PASSWORD') ?:   "YourStrong<>Passw0rd";
 
 
 	// Generate unique DB name, example: php_20160817_1471475608267
