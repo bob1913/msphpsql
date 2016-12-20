@@ -45,7 +45,8 @@ install:
     - appveyor DownloadFile http://windows.php.net/downloads/php-sdk/php-sdk-binary-tools-20110915.zip    
     - move php-sdk-binary-tools-20110915.zip ..
     - echo Downloading PHP source code [%PHP_VERSION%]
-    - ps: (new-object net.webclient).DownloadFile('http://windows.php.net/downloads/releases/php-' + ${env:PHP_VERSION} + '-' + ${env:PHP_TS} + '-VC' + ${env:PHP_VC} + '-' + ${env:BUILD_PLATFORM} + '.zip', ${env:APPVEYOR_BUILD_FOLDER} + '\..\php.zip')
+#    - ps: (new-object net.webclient).DownloadFile('http://windows.php.net/downloads/releases/php-' + ${env:PHP_VERSION} + '-' + ${env:PHP_TS} + '-VC' + ${env:PHP_VC} + '-' + ${env:BUILD_PLATFORM} + '.zip', ${env:APPVEYOR_BUILD_FOLDER} + '\..\php.zip')
+    - ps: (new-object net.webclient).DownloadFile('http://windows.php.net/downloads/releases/php-' + ${env:PHP_VERSION} + '-src.zip', ${env:APPVEYOR_BUILD_FOLDER} + '\..\php.zip')
     - echo Downloading PHP deps [%PHP_DEPSVER%]
     - ps: (new-object net.webclient).DownloadFile('http://windows.php.net/downloads/php-sdk/deps-' + ${env:PHP_DEPSVER} + '-vc' + ${env:PHP_VC} + '-' + ${env:BUILD_PLATFORM} + '.7z', ${env:APPVEYOR_BUILD_FOLDER} + '\..\deps.7z')
     - cd ..
@@ -61,6 +62,8 @@ build_script:
     - copy /Y c:\projects\sqlphp\sqlsrv %PHP_SDK_DIR%\ext\sqlsrv
     - copy /Y c:\projects\sqlphp\pdo_sqlsrv %PHP_SDK_DIR%\ext\pdo_sqlsrv
     - cd %PHP_SDK_DIR%
+    - cd
+    - dir 
     - buildconf.bat
     - configure.bat --disable-all --disable-zts --enable-cli --enable-sqlsrv=shared --with-pdo-sqlsrv=shared --enable-pdo=shared --with-prefix=%PHP_INSTALL_DIR%
     - copy php.ini-development php.ini
