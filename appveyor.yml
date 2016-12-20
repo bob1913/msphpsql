@@ -61,7 +61,7 @@ build_script:
     - mkdir %PHP_SDK_DIR%\ext\pdo_sqlsrv
     - copy /Y c:\projects\sqlphp\sqlsrv %PHP_SDK_DIR%\ext\sqlsrv
     - copy /Y c:\projects\sqlphp\pdo_sqlsrv %PHP_SDK_DIR%\ext\pdo_sqlsrv
-    - cd %PHP_SDK_DIR%
+    - cd %PHP_SDK_DIR%\php-%PHP_VERSION%-src
     - cd
     - dir 
     - buildconf.bat
