@@ -57,10 +57,10 @@ install:
 build_script:
     - echo "C:\Program Files (x86)\Microsoft Visual Studio %PHP_VC%.0\VC\vcvarsall.bat %BUILD_PLATFORM%"
     - '"C:\\Program Files (x86)\\Microsoft Visual Studio %PHP_VC%.0\\VC\\vcvarsall.bat" %BUILD_PLATFORM%'
-    - mkdir %PHP_SDK_DIR%\ext\sqlsrv
-    - mkdir %PHP_SDK_DIR%\ext\pdo_sqlsrv
-    - copy /Y c:\projects\sqlphp\sqlsrv %PHP_SDK_DIR%\ext\sqlsrv
-    - copy /Y c:\projects\sqlphp\pdo_sqlsrv %PHP_SDK_DIR%\ext\pdo_sqlsrv
+    - mkdir %PHP_SDK_DIR%\php-%PHP_VERSION%-src\ext\sqlsrv
+    - mkdir %PHP_SDK_DIR%\php-%PHP_VERSION%-src\ext\pdo_sqlsrv
+    - copy /Y c:\projects\sqlphp\sqlsrv %PHP_SDK_DIR%\php-%PHP_VERSION%-src\ext\sqlsrv
+    - copy /Y c:\projects\sqlphp\pdo_sqlsrv %PHP_SDK_DIR%\php-%PHP_VERSION%-src\ext\pdo_sqlsrv
     - cd %PHP_SDK_DIR%\php-%PHP_VERSION%-src
     - cd
     - dir 
