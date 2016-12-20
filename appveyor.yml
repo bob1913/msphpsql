@@ -1,0 +1,80 @@
+version: '{branch}.{build}'
+  
+branches:
+  # whitelist
+  only:
+    - master
+    - PHP-7.0
+
+  # blacklist
+  except:
+    - PHP-7.0-Linux
+    - PHP5
+
+ environment:
+    MSSQL_PASSWORD:Password12!
+    MSSQL_SERVERNAME:(local)\SQL2016
+    MSSQL_USERNAME:sa
+    PHP_VERSION: 7.0.14
+    PHP_DEPSVER: 7.0
+    PHP_SDK: c:\projects\php    
+
+    matrix:
+      - BUILD_PLATFORM: x64
+        PHP_VC: 14
+        PHP_TS: nts-Win32
+        PHP_SDK_DIR: c:\projects\php\x64
+        PHP_INSTALL_DIR: c:\projects\php\x64\bin
+        platform: x64
+        
+
+
+# Build worker image (VM template)
+image: Visual Studio 2015
+    
+services:
+  - mssql2016
+  
+# clone directory
+clone_folder: c:\projects\sqlphp
+
+build:
+    parallel: true                  # enable MSBuild parallel builds
+
+install:
+    - echo Downloading PHP-SDK
+    - appveyor DownloadFile http://windows.php.net/downloads/php-sdk/php-sdk-binary-tools-20110915.zip    
+    - move php-sdk-binary-tools-20110915.zip ..
+    - echo Downloading PHP source code [%PHP_VERSION%]
+    - ps: (new-object net.webclient).DownloadFile('http://windows.php.net/downloads/releases/php-' + ${env:PHP_VERSION} + '-' + ${env:PHP_TS} + '-VC' + ${env:PHP_VC} + '-' + ${env:BUILD_PLATFORM} + '.zip', ${env:APPVEYOR_BUILD_FOLDER} + '\..\php.zip')
+    - echo Downloading PHP deps [%PHP_DEPSVER%]
+    - ps: (new-object net.webclient).DownloadFile('http://windows.php.net/downloads/php-sdk/deps-' + ${env:PHP_DEPSVER} + '-vc' + ${env:PHP_VC} + '-' + ${env:BUILD_PLATFORM} + '.zip', ${env:APPVEYOR_BUILD_FOLDER} + '\..\deps.7z')
+    - cd ..
+    - cd
+    - 7z x -y php-sdk-binary-tools-20110915.zip -o%PHP_SDK%
+    - 7z x -y php.zip -o%PHP_SDK_DIR%
+    
+build_script:
+    - echo "C:\Program Files (x86)\Microsoft Visual Studio %PHP_VC%.0\VC\vcvarsall.bat %BUILD_PLATFORM%"
+    - '"C:\\Program Files (x86)\\Microsoft Visual Studio %PHP_VC%.0\\VC\\vcvarsall.bat" %BUILD_PLATFORM%'
+    - mkdir %PHP_SDK_DIR%\ext\sqlsrv
+    - mkdir %PHP_SDK_DIR%\ext\pdo_sqlsrv
+    - copy /Y c:\projects\sqlphp\sqlsrv %PHP_SDK_DIR%\ext\sqlsrv
+    - copy /Y c:\projects\sqlphp\pdo_sqlsrv %PHP_SDK_DIR%\ext\pdo_sqlsrv
+    - cd %PHP_SDK_DIR%
+    - buildconf.bat
+    - configure.bat --disable-all --disable-zts --enable-cli --enable-sqlsrv=shared --with-pdo-sqlsrv=shared --enable-pdo=shared --with-prefix=%PHP_INSTALL_DIR%
+    - copy php.ini-development php.ini
+    - echo extension_dir=%PHP_INSTALL_DIR%\ext >> php.ini
+    - echo extension=php_sqlsrv.dll >> php.ini
+    - echo extension=php_pdo_sqlsrv.dll >> php.ini
+    - nmake
+    - nmake install
+    - copy php.ini %PHP_INSTALL_DIR%
+    - dir %PHP_INSTALL_DIR%  
+
+test_script:
+    - cd %PHP_INSTALL_DIR%  
+    - php --ini
+    - php -i
+
