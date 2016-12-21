@@ -5,9 +5,6 @@
 	$password   = getenv('MSSQL_PASSWORD') ?:   "<YourStrong!Passw0rd>";
 
 
-	print "servername: $serverName";
-	$envout = getenv('MSSQL_PASSWORD');
-	print "env password:  $envout";
 	// Generate unique DB name, example: php_20160817_1471475608267
 	$dbName = "php_" . date("Ymd") . "_" . round(microtime(true)*1000);
 
