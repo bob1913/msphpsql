@@ -86,6 +86,6 @@ test_script:
     - cd %PHP_INSTALL_DIR%  
     - php --ini
     - php -i    
-    - php run-tests.php -p php.exe c:\projects\sqlphp\sqlsrv\*.phpt
-    - php run-tests.php -p php.exe c:\projects\sqlphp\pdo_sqlsrv\*.phpt
+    - php run-tests.php -p php.exe c:\projects\sqlphp\test\sqlsrv\*.phpt
+    - php run-tests.php -p php.exe c:\projects\sqlphp\test\pdo_sqlsrv\*.phpt
 
