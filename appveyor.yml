@@ -67,17 +67,19 @@ build_script:
     - '%PHP_SDK%\bin\phpsdk_setvars.bat'
     - buildconf.bat
     - configure.bat --disable-all --disable-zts --enable-cli --enable-sqlsrv=shared --with-pdo-sqlsrv=shared --enable-pdo=shared --with-prefix=%PHP_INSTALL_DIR%
-    - copy php.ini-development php.ini
+    - copy php.ini-development php.ini    
     - echo extension_dir=%PHP_INSTALL_DIR%\ext >> php.ini
     - echo extension=php_sqlsrv.dll >> php.ini
     - echo extension=php_pdo_sqlsrv.dll >> php.ini
     - nmake
     - nmake install
     - copy php.ini %PHP_INSTALL_DIR%
+    - copy run-tests.php %PHP_INSTALL_DIR%
     - dir %PHP_INSTALL_DIR%  
 
 test_script:
     - cd %PHP_INSTALL_DIR%  
     - php --ini
     - php -i
+    - php run-tests.php
 
