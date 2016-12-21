@@ -60,12 +60,12 @@ install:
     - echo update SQL connection string
     - ps: (Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php) | ForEach-Object { $_ -replace "localhost",  ${env:MSSQL_SERVERNAME} -replace "<YourStrong!Passw0rd>",  ${env:MSSQL_PASSWORD} } | Set-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php
     - ps: (Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php) | ForEach-Object { $_ -replace "localhost",  ${env:MSSQL_SERVERNAME} -replace "<YourStrong!Passw0rd>",  ${env:MSSQL_PASSWORD} } | Set-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php
-    - ps: Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php
+    - ps: Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php
 
     
 build_script:
-    - echo "C:\Program Files (x86)\Microsoft Visual Studio %PHP_VC%.0\VC\vcvarsall.bat %BUILD_PLATFORM%"
     - '"C:\\Program Files (x86)\\Microsoft Visual Studio %PHP_VC%.0\\VC\\vcvarsall.bat" %BUILD_PLATFORM%'
+    - Echo copy msphp code to ext folder
     - mkdir %PHP_SDK_DIR%\php-%PHP_VERSION%-src\ext\sqlsrv
     - mkdir %PHP_SDK_DIR%\php-%PHP_VERSION%-src\ext\pdo_sqlsrv
     - copy /Y %APPVEYOR_BUILD_FOLDER%\sqlsrv %PHP_SDK_DIR%\php-%PHP_VERSION%-src\ext\sqlsrv
@@ -92,5 +92,5 @@ test_script:
     - php -i    
     - set
     - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\sqlsrv\*.phpt
-    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt
+    - php run-tests.php --show-out -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt
 
