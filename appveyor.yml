@@ -87,6 +87,6 @@ test_script:
     - php --ini
     - php -i    
     - set
-    - php run-tests.php -p --show-out php.exe c:\projects\sqlphp\test\sqlsrv\*.phpt
+    - php run-tests.php --show-out -p php.exe c:\projects\sqlphp\test\sqlsrv\*.phpt
     - php run-tests.php -p php.exe c:\projects\sqlphp\test\pdo_sqlsrv\*.phpt
 
