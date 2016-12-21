@@ -64,6 +64,7 @@ build_script:
     - cd %PHP_SDK_DIR%\php-%PHP_VERSION%-src
     - cd
     - dir 
+    - %PHP_SDK%\bin\phpsdk_setvars.bat
     - buildconf.bat
     - configure.bat --disable-all --disable-zts --enable-cli --enable-sqlsrv=shared --with-pdo-sqlsrv=shared --enable-pdo=shared --with-prefix=%PHP_INSTALL_DIR%
     - copy php.ini-development php.ini
