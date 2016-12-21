@@ -5,7 +5,7 @@ PHPT Drop missing database
 <?php
 require_once("autonomous_setup.php");
 
-$connectionInfo = array( "UID"=>"$username", "PWD"=>"$password");
+$connectionInfo = array( "UID"=>"$username", "PWD"=>"$password", "CharacterSet" => 'UTF-8');
 $conn = sqlsrv_connect( $serverName, $connectionInfo);
 
 // Check if connected
