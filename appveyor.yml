@@ -58,8 +58,8 @@ install:
     - 7z x -y php-sdk-binary-tools-20110915.zip -o%PHP_SDK%
     - 7z x -y php.zip -o%PHP_SDK_DIR%
     - echo update SQL connection string
-    - ps: (Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php) | ForEach-Object { $_ -replace "localhost",  ${env:MSSQL_SERVERNAME}; $_ -replace "<YourStrong!Passw0rd>",  ${env:MSSQL_PASSWORD} } | Set-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php
-    - ps: (Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php) | ForEach-Object { $_ -replace "localhost",  ${env:MSSQL_SERVERNAME}; $_ -replace "<YourStrong!Passw0rd>",  ${env:MSSQL_PASSWORD} } | Set-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php
+    - ps: (Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php) | ForEach-Object { $_ -replace "localhost",  ${env:MSSQL_SERVERNAME} -replace "<YourStrong!Passw0rd>",  ${env:MSSQL_PASSWORD} } | Set-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php
+    - ps: (Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php) | ForEach-Object { $_ -replace "localhost",  ${env:MSSQL_SERVERNAME} -replace "<YourStrong!Passw0rd>",  ${env:MSSQL_PASSWORD} } | Set-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php
     - ps: Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php
 
     
