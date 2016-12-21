@@ -27,14 +27,17 @@ environment:
         PHP_INSTALL_DIR: c:\projects\php\x64\bin
         platform: x64
         
-
+# PHP_INSTALL_DIR is where the built PHP binaries go
+# PHP_SDK_DIR is where PHP source is extracted to (e.g. PHP_SDK_DIR\php-7.0.14-src)
+# PHP_SDK is where PHP sdk binary tools are extracted to
+        
 # Build worker image (VM template)
 image: Visual Studio 2015
     
 services:
   - mssql2016
   
-# clone directory
+# clone directory (or %APPVEYOR_BUILD_FOLDER%)
 clone_folder: c:\projects\sqlphp
 
 build:
@@ -82,6 +85,7 @@ build_script:
     - echo extension=php_pdo_sqlsrv.dll >> php.ini
     - nmake
     - nmake install
+    - Echo copy php.ini and run-tests.php from php source to install directory.
     - copy php.ini %PHP_INSTALL_DIR%
     - copy run-tests.php %PHP_INSTALL_DIR%
     - dir %PHP_INSTALL_DIR%  
@@ -90,7 +94,6 @@ test_script:
     - cd %PHP_INSTALL_DIR%  
     - php --ini
     - php -i    
-    - set
     - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\sqlsrv\*.phpt
     - php run-tests.php --show-out -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt
 
