@@ -26,6 +26,12 @@ environment:
         PHP_SDK_DIR: c:\projects\php\x64
         PHP_INSTALL_DIR: c:\projects\php\x64\bin
         platform: x64
+      - BUILD_PLATFORM: x86
+        PHP_VC: 14
+        PHP_TS: nts-Win32
+        PHP_SDK_DIR: c:\projects\php\x86
+        PHP_INSTALL_DIR: c:\projects\php\x86\bin
+        platform: x86
         
 # PHP_INSTALL_DIR is where the built PHP binaries go
 # PHP_SDK_DIR is where PHP source is extracted to (e.g. PHP_SDK_DIR\php-7.0.14-src)
@@ -57,7 +63,7 @@ install:
     #- ps: (new-object net.webclient).DownloadFile('http://windows.php.net/downloads/php-sdk/deps-' + ${env:PHP_DEPSVER} + '-vc' + ${env:PHP_VC} + '-' + ${env:BUILD_PLATFORM} + '.7z', ${env:APPVEYOR_BUILD_FOLDER} + '\..\deps.7z')
     - echo Downloading MSODBC
     # 32-bit https://download.microsoft.com/download/1/E/7/1E7B1181-3974-4B29-9A47-CC857B271AA2/English/X86/msodbcsql.msi
-    - ps: (new-object net.webclient).DownloadFile('https://download.microsoft.com/download/1/E/7/1E7B1181-3974-4B29-9A47-CC857B271AA2/English/X64/msodbcsql.msi', 'msodbcsql.msi')
+    - ps: (new-object net.webclient).DownloadFile('https://download.microsoft.com/download/1/E/7/1E7B1181-3974-4B29-9A47-CC857B271AA2/English/' + ${env:BUILD_PLATFORM} + '/msodbcsql.msi', 'msodbcsql.msi')
     - ps: msiexec /i msodbcsql.msi /quiet /qn /norestart        
     - cd ..
     - cd
