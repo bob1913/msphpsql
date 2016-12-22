@@ -94,6 +94,9 @@ test_script:
     - cd %PHP_INSTALL_DIR%  
     - php --ini
     - php -i    
-    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\sqlsrv\*.phpt
-    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt
+    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\sqlsrv\*.phpt > sqlsrv.log 2>&1
+    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt > pdo_sqlsrv.log 2>&1
+    - python %APPVEYOR_BUILD_FOLDER%\test\output.py
+    - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult1.xml))
+    - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult2.xml))
 
