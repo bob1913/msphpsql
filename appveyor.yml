@@ -106,7 +106,7 @@ after_test:
     - type pdo_sqlsrv.log
     - echo pdo_sqlsrv.log 2
     - ps: Get-Content pdo_sqlsrv.log
-    - python output.py
+    - ps: python output.py
     - echo native1
     - ps: Get-Content nativeresult1.xml
     - echo native2
