@@ -17,8 +17,7 @@ environment:
     MSSQL_USERNAME: sa
     PHP_VERSION: 7.0.14
     PHP_DEPSVER: 7.0
-    PHP_SDK: c:\projects\php
-    REPORT_EXIT_STATUS: 1
+    PHP_SDK: c:\projects\php    
     matrix:
       - BUILD_PLATFORM: x64
         PHP_VC: 14
