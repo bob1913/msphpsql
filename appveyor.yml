@@ -15,7 +15,7 @@ environment:
     MSSQL_PASSWORD: Password12!
     MSSQL_SERVERNAME: (local)\SQL2016
     MSSQL_USERNAME: sa
-    PHP_VERSION: 7.0.14
+#    PHP_VERSION: 7.0.14
     PHP_DEPSVER: 7.0
     PHP_SDK: c:\projects\php
 #    REPORT_EXIT_STATUS: 1
