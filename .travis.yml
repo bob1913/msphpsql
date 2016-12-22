@@ -1,0 +1,3 @@
+branches:
+  except:
+  - PHP-7.0
