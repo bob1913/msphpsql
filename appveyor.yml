@@ -100,6 +100,8 @@ test_script:
    
 after_test:
     - cd %APPVEYOR_BUILD_FOLDER%\test\
+    - echo pdo_sqlsrv.log
+    - ps: Get-Content pdo_sqlsrv.log
     - python %APPVEYOR_BUILD_FOLDER%\test\output.py
     - echo native1
     - ps: Get-Content nativeresult1.xml
