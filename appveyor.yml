@@ -100,13 +100,17 @@ test_script:
    
 after_test:
     - cd %APPVEYOR_BUILD_FOLDER%\test\
-    - echo pdo_sqlsrv.log
+    - dir
+    - echo pdo_sqlsrv.log 1
+    - type pdo_sqlsrv.log
+    - echo pdo_sqlsrv.log 2
     - ps: Get-Content pdo_sqlsrv.log
-    - python %APPVEYOR_BUILD_FOLDER%\test\output.py
+    - python output.py
     - echo native1
     - ps: Get-Content nativeresult1.xml
     - echo native2
     - ps: Get-Content nativeresult2.xml
+    - dir
     - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult1.xml))
     - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult2.xml))
     - ps: >- 
