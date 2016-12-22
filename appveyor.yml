@@ -23,15 +23,19 @@ environment:
       - BUILD_PLATFORM: x64
         PHP_VC: 14
         PHP_TS: nts-Win32
+        PHP_MAJOR_VER: 7.0
+        PHP_MINOR_VER: latest        
         PHP_SDK_DIR: c:\projects\php\x64
         PHP_INSTALL_DIR: c:\projects\php\x64\bin
         platform: x64
-      - BUILD_PLATFORM: x86
-        PHP_VC: 14
-        PHP_TS: nts-Win32
-        PHP_SDK_DIR: c:\projects\php\x86
-        PHP_INSTALL_DIR: c:\projects\php\x86\bin
-        platform: x86
+ #     - BUILD_PLATFORM: x86
+#        PHP_VC: 14
+#        PHP_TS: nts-Win32
+#        PHP_MAJOR_VER: 7.0
+#        PHP_MINOR_VER: latest
+#        PHP_SDK_DIR: c:\projects\php\x86
+#        PHP_INSTALL_DIR: c:\projects\php\x86\bin
+#        platform: x86
         
 # PHP_INSTALL_DIR is where the built PHP binaries go
 # PHP_SDK_DIR is where PHP source is extracted to (e.g. PHP_SDK_DIR\php-7.0.14-src)
@@ -53,6 +57,16 @@ build:
     parallel: true                  # enable MSBuild parallel builds
 
 install:
+    - echo Setting PHP version...
+    - appveyor DownloadFile http://windows.php.net/downloads/releases/sha1sum.txt
+    - ps: >-
+      If ($env:PHP_MINOR_VER -Match "latest") {
+        $env:PHP_VERSION=type sha1sum.txt | where { $_ -match "php-($PHP_MAJOR_VER\.\d+)-src" } | foreach { $matches[1] } ;     
+      } Else {
+        $env:PHP_VERSION=$PHP_MAJOR_VER + '.' + $PHP_MINOR_VER;
+      }
+      write-host "php ver: $env:PHP_VERSION";      
+      $host.SetShouldExit(1);      
     - echo Downloading PHP-SDK
     - appveyor DownloadFile http://windows.php.net/downloads/php-sdk/php-sdk-binary-tools-20110915.zip    
     - move php-sdk-binary-tools-20110915.zip ..
