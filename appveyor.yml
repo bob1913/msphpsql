@@ -60,13 +60,13 @@ install:
     - echo Setting PHP version...
     - appveyor DownloadFile http://windows.php.net/downloads/releases/sha1sum.txt
     - ps: >-
-      If ($env:PHP_MINOR_VER -Match "latest") {
-        $env:PHP_VERSION=type sha1sum.txt | where { $_ -match "php-($PHP_MAJOR_VER\.\d+)-src" } | foreach { $matches[1] } ;     
-      } Else {
-        $env:PHP_VERSION=$PHP_MAJOR_VER + '.' + $PHP_MINOR_VER;
-      }
-      write-host "php ver: $env:PHP_VERSION";      
-      $host.SetShouldExit(1);      
+        If ($env:PHP_MINOR_VER -Match "latest") {
+            $env:PHP_VERSION=type sha1sum.txt | where { $_ -match "php-($env:PHP_MAJOR_VER\.\d+)-src" } | foreach { $matches[1] }  ; 
+        } Else {
+            $env:PHP_VERSION=$env:PHP_MAJOR_VER + '.' + $env:PHP_MINOR_VER;
+        }
+        write-host "php ver: $env:PHP_VERSION";      
+        $host.SetShouldExit(1);      
     - echo Downloading PHP-SDK
     - appveyor DownloadFile http://windows.php.net/downloads/php-sdk/php-sdk-binary-tools-20110915.zip    
     - move php-sdk-binary-tools-20110915.zip ..
