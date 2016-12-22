@@ -95,8 +95,8 @@ test_script:
     - cd %PHP_INSTALL_DIR%  
     - php --ini
     - php -i    
-    - ps: .\php.exe run-tests.php -p php.exe ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\*.phpt | tee ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv.log
-    - ps: .\php.exe run-tests.php -p php.exe ${env:APPVEYOR_BUILD_FOLDER\test\pdo_sqlsrv\*.phpt | tee ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv.log    
+    - ps: .\php.exe run-tests.php -p php.exe ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\*.phpt | tee $env:APPVEYOR_BUILD_FOLDER\test\sqlsrv.log
+    - ps: .\php.exe run-tests.php -p php.exe ${env:APPVEYOR_BUILD_FOLDER\test\pdo_sqlsrv\*.phpt | tee $env:APPVEYOR_BUILD_FOLDER\test\pdo_sqlsrv.log    
    
 after_test:
     - cd %APPVEYOR_BUILD_FOLDER%\test\
