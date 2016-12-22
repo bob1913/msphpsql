@@ -17,8 +17,10 @@ environment:
     MSSQL_USERNAME: sa
     PHP_VERSION: 7.0.14
     PHP_DEPSVER: 7.0
-    PHP_SDK: c:\projects\php    
+    PHP_SDK: c:\projects\php
+    REPORT_EXIT_STATUS: 1
     matrix:
+      fast_finish: true
       - BUILD_PLATFORM: x64
         PHP_VC: 14
         PHP_TS: nts-Win32
@@ -91,8 +93,8 @@ test_script:
     - cd %PHP_INSTALL_DIR%  
     - php --ini
     - php -i    
-    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\sqlsrv.log 2>&1
-    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv.log 2>&1    
+    - ps: php run-tests.php -p php.exe ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\*.phpt | tee ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv.log
+    - ps: php run-tests.php -p php.exe ${env:APPVEYOR_BUILD_FOLDER\test\pdo_sqlsrv\*.phpt | tee ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv.log    
    
 after_test:
     - cd %APPVEYOR_BUILD_FOLDER%\test\
