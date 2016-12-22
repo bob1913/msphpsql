@@ -15,7 +15,6 @@ environment:
     MSSQL_PASSWORD: Password12!
     MSSQL_SERVERNAME: (local)\SQL2016
     MSSQL_USERNAME: sa
-#    PHP_VERSION: 7.0.14
     PHP_DEPSVER: 7.0
     PHP_SDK: c:\projects\php
 #    REPORT_EXIT_STATUS: 1
@@ -24,18 +23,35 @@ environment:
         PHP_VC: 14
         PHP_TS: nts-Win32
         PHP_MAJOR_VER: 7.0
-        PHP_MINOR_VER: 12        
+        PHP_MINOR_VER: latest        
         PHP_SDK_DIR: c:\projects\php\x64
         PHP_INSTALL_DIR: c:\projects\php\x64\bin
         platform: x64
- #     - BUILD_PLATFORM: x86
-#        PHP_VC: 14
-#        PHP_TS: nts-Win32
-#        PHP_MAJOR_VER: 7.0
-#        PHP_MINOR_VER: latest
-#        PHP_SDK_DIR: c:\projects\php\x86
-#        PHP_INSTALL_DIR: c:\projects\php\x86\bin
-#        platform: x86
+      - BUILD_PLATFORM: x86
+        PHP_VC: 14
+        PHP_TS: nts-Win32
+        PHP_MAJOR_VER: 7.0
+        PHP_MINOR_VER: latest
+        PHP_SDK_DIR: c:\projects\php\x86
+        PHP_INSTALL_DIR: c:\projects\php\x86\bin
+        platform: x86
+      - BUILD_PLATFORM: x64
+        PHP_VC: 14
+        PHP_TS: nts-Win32
+        PHP_MAJOR_VER: 7.1
+        PHP_MINOR_VER: latest        
+        PHP_SDK_DIR: c:\projects\php\x64
+        PHP_INSTALL_DIR: c:\projects\php\x64\bin
+        platform: x64
+      - BUILD_PLATFORM: x86
+        PHP_VC: 14
+        PHP_TS: nts-Win32
+        PHP_MAJOR_VER: 7.1
+        PHP_MINOR_VER: latest
+        PHP_SDK_DIR: c:\projects\php\x86
+        PHP_INSTALL_DIR: c:\projects\php\x86\bin
+        platform: x86
+
         
 # PHP_INSTALL_DIR is where the built PHP binaries go
 # PHP_SDK_DIR is where PHP source is extracted to (e.g. PHP_SDK_DIR\php-7.0.14-src)
