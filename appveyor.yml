@@ -24,7 +24,7 @@ environment:
         PHP_VC: 14
         PHP_TS: nts-Win32
         PHP_MAJOR_VER: 7.0
-        PHP_MINOR_VER: latest        
+        PHP_MINOR_VER: 12        
         PHP_SDK_DIR: c:\projects\php\x64
         PHP_INSTALL_DIR: c:\projects\php\x64\bin
         platform: x64
