@@ -106,8 +106,8 @@ after_test:
     - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult1.xml))
     - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult2.xml))
     - ps: >- 
-        [xml]$results = Get-Content tests/results/nativeresult1.xml 
-        [xml]$results2 = Get-Content tests/results/nativeresult2.xml 
+        [xml]$results = Get-Content .\nativeresult1.xml 
+        [xml]$results2 = Get-Content .\nativeresult2.xml 
         $failure = $results.SelectSingleNode("//failure")
         $failure2 = $results2.SelectSingleNode("//failure")
         if ($failure -ne $null -Or $failure2 -ne $null) 
