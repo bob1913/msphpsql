@@ -81,8 +81,6 @@ install:
         } Else {
             $env:PHP_VERSION=$env:PHP_MAJOR_VER + '.' + $env:PHP_MINOR_VER;
         }
-        write-host "php ver: $env:PHP_VERSION";      
-        $host.SetShouldExit(1);      
     - echo Downloading PHP-SDK
     - appveyor DownloadFile http://windows.php.net/downloads/php-sdk/php-sdk-binary-tools-20110915.zip    
     - move php-sdk-binary-tools-20110915.zip ..
