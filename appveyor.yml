@@ -63,9 +63,7 @@ install:
     - echo update SQL connection string
     - ps: (Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php) | ForEach-Object { $_ -replace "localhost",  ${env:MSSQL_SERVERNAME} -replace "<YourStrong!Passw0rd>",  ${env:MSSQL_PASSWORD} } | Set-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php
     - ps: (Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php) | ForEach-Object { $_ -replace "localhost",  ${env:MSSQL_SERVERNAME} -replace "<YourStrong!Passw0rd>",  ${env:MSSQL_PASSWORD} } | Set-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php
-    - ps: Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php
-
-    
+        
 build_script:
     - '"C:\\Program Files (x86)\\Microsoft Visual Studio %PHP_VC%.0\\VC\\vcvarsall.bat" %BUILD_PLATFORM%'
     - Echo copy msphp code to ext folder
@@ -95,8 +93,11 @@ test_script:
     - php --ini
     - php -i    
     - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\sqlsrv\*.phpt > sqlsrv.log 2>&1
-    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt > pdo_sqlsrv.log 2>&1
+    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt > pdo_sqlsrv.log 2>&1    
+    - dir
+    - ps: Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\sqlsrv.log
     - python %APPVEYOR_BUILD_FOLDER%\test\output.py
+    - dir
     - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult1.xml))
     - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult2.xml))
 
