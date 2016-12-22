@@ -95,32 +95,24 @@ test_script:
     - cd %PHP_INSTALL_DIR%  
     - php --ini
     - php -i    
-    - ps: .\php.exe run-tests.php -p php.exe ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\*.phpt | tee ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv.log
-    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv.log 2>&1
+    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\sqlsrv.log 2>&1    
+    - type %APPVEYOR_BUILD_FOLDER%\test\sqlsrv.log
+    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv.log 2>&1    
+    - type %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv.log
 #    - ps: .\php.exe run-tests.php -p php.exe ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\*.phpt | tee ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv.log    
    
 after_test:
-    - cd %APPVEYOR_BUILD_FOLDER%\test\
-    - dir
-    - echo pdo_sqlsrv.log 1
-    - type pdo_sqlsrv.log
-    - echo pdo_sqlsrv.log 2
-    - ps: Get-Content pdo_sqlsrv.log
-    - ps: python output.py
-    - echo native1
-    - ps: Get-Content nativeresult1.xml
-    - echo native2
-    - ps: Get-Content nativeresult2.xml
-    - dir
+    - cd %APPVEYOR_BUILD_FOLDER%\test\    
+    - python output.py    
     - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult1.xml))
     - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult2.xml))
     - ps: >- 
-        [xml]$results = Get-Content nativeresult1.xml 
-        [xml]$results2 = Get-Content nativeresult2.xml 
-        $failure = $results.SelectSingleNode("//failure")
-        $failure2 = $results2.SelectSingleNode("//failure")
+        [xml]$results = Get-Content nativeresult1.xml ;
+        [xml]$results2 = Get-Content nativeresult2.xml ;
+        $failure = $results.SelectSingleNode("//failure");
+        $failure2 = $results2.SelectSingleNode("//failure");
         if ($failure -ne $null -Or $failure2 -ne $null) 
         { 
-            $host.SetShouldExit(1)
-            Write-Host "Forcing build failure due to phpt unit test failure(s)"
+            $host.SetShouldExit(1);
+            Write-Host "Forcing build failure due to phpt unit test failure(s)";
         }
