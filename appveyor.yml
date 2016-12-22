@@ -94,11 +94,10 @@ test_script:
     - php -i    
     - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\sqlsrv.log 2>&1
     - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv.log 2>&1    
+   
+after_test:
     - cd %APPVEYOR_BUILD_FOLDER%\test\
-    - dir
-    - ps: Get-Content sqlsrv.log
     - python %APPVEYOR_BUILD_FOLDER%\test\output.py
-    - dir
     - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult1.xml))
     - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult2.xml))
 
