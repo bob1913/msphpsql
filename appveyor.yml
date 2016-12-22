@@ -18,7 +18,7 @@ environment:
     PHP_VERSION: 7.0.14
     PHP_DEPSVER: 7.0
     PHP_SDK: c:\projects\php
-    REPORT_EXIT_STATUS: 1
+#    REPORT_EXIT_STATUS: 1
     matrix:      
       - BUILD_PLATFORM: x64
         PHP_VC: 14
@@ -105,4 +105,13 @@ after_test:
     - ps: Get-Content nativeresult1.xml
     - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult1.xml))
     - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\nativeresult2.xml))
-
+    - ps: >- 
+        [xml]$results = Get-Content tests/results/nativeresult1.xml 
+        [xml]$results2 = Get-Content tests/results/nativeresult2.xml 
+        $failure = $results.SelectSingleNode("//failure")
+        $failure2 = $results2.SelectSingleNode("//failure")
+        if ($failure -ne $null -Or $failure2 -ne $null) 
+        { 
+            $host.SetShouldExit(1)
+            Write-Host "Forcing build failure due to phpt unit test failure(s)"
+        }
