@@ -103,7 +103,9 @@ install:
     - 7z x -y php.zip -o%PHP_SDK_DIR%
     - echo update SQL connection string
     - ps: (Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php) | ForEach-Object { $_ -replace "localhost",  ${env:MSSQL_SERVERNAME} -replace "<YourStrong!Passw0rd>",  ${env:MSSQL_PASSWORD} } | Set-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php
+    - ps: Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\pdo_sqlsrv\autonomous_setup.php
     - ps: (Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php) | ForEach-Object { $_ -replace "localhost",  ${env:MSSQL_SERVERNAME} -replace "<YourStrong!Passw0rd>",  ${env:MSSQL_PASSWORD} } | Set-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php
+    - ps: Get-Content ${env:APPVEYOR_BUILD_FOLDER}\test\sqlsrv\autonomous_setup.php
         
 build_script:
     - '"C:\\Program Files (x86)\\Microsoft Visual Studio %PHP_VC%.0\\VC\\vcvarsall.bat" %BUILD_PLATFORM%'
@@ -133,7 +135,7 @@ test_script:
     - cd %PHP_INSTALL_DIR%  
     - php --ini
     - php -i    
-    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\sqlsrv.log 2>&1    
+    - php run-tests.php --show-out -p php.exe %APPVEYOR_BUILD_FOLDER%\test\sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\sqlsrv.log 2>&1    
     - type %APPVEYOR_BUILD_FOLDER%\test\sqlsrv.log
     - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv.log 2>&1    
     - type %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv.log
