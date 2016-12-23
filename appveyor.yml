@@ -28,7 +28,7 @@ environment:
         PHP_INSTALL_DIR: c:\projects\php\x64\bin
         platform: x64
       - BUILD_PLATFORM: x86
-        MSSQL_SERVERNAME: (local)\SQL2014
+        MSSQL_SERVERNAME: (local)\SQL2012SP1
         PHP_VC: 14
         PHP_TS: nts-Win32
         PHP_MAJOR_VER: 7.0
@@ -37,7 +37,7 @@ environment:
         PHP_INSTALL_DIR: c:\projects\php\x86\bin
         platform: x86
       - BUILD_PLATFORM: x64
-        MSSQL_SERVERNAME: (local)\SQL2016
+        MSSQL_SERVERNAME: (local)\SQL2012SP1
         PHP_VC: 14
         PHP_TS: nts-Win32
         PHP_MAJOR_VER: 7.1
@@ -67,8 +67,9 @@ matrix:
   fast_finish: true
     
 services:
-  - mssql2014
   - mssql2016
+  - mssql2014
+  - mssql2012sp1
   
 # clone directory (or %APPVEYOR_BUILD_FOLDER%)
 clone_folder: c:\projects\sqlphp
