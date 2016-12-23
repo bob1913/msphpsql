@@ -135,7 +135,7 @@ test_script:
     - cd %PHP_INSTALL_DIR%  
     - php --ini
     - php -i    
-    - php run-tests.php --show-out -p php.exe %APPVEYOR_BUILD_FOLDER%\test\sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\sqlsrv.log 2>&1    
+    - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\sqlsrv.log 2>&1    
     - type %APPVEYOR_BUILD_FOLDER%\test\sqlsrv.log
     - php run-tests.php -p php.exe %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv\*.phpt > %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv.log 2>&1    
     - type %APPVEYOR_BUILD_FOLDER%\test\pdo_sqlsrv.log
