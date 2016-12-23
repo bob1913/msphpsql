@@ -27,6 +27,7 @@ environment:
         PHP_SDK_DIR: c:\projects\php\x64
         PHP_INSTALL_DIR: c:\projects\php\x64\bin
         platform: x64
+        services: mssql2014
       - BUILD_PLATFORM: x86
         MSSQL_SERVERNAME: (local)\SQL2012SP1
         PHP_VC: 14
@@ -36,6 +37,7 @@ environment:
         PHP_SDK_DIR: c:\projects\php\x86
         PHP_INSTALL_DIR: c:\projects\php\x86\bin
         platform: x86
+        services: mssql2012sp1
       - BUILD_PLATFORM: x64
         MSSQL_SERVERNAME: (local)\SQL2012SP1
         PHP_VC: 14
@@ -45,6 +47,7 @@ environment:
         PHP_SDK_DIR: c:\projects\php\x64
         PHP_INSTALL_DIR: c:\projects\php\x64\bin
         platform: x64
+        services: mssql2012sp1
       - BUILD_PLATFORM: x86
         MSSQL_SERVERNAME: (local)\SQL2016
         PHP_VC: 14
@@ -54,6 +57,7 @@ environment:
         PHP_SDK_DIR: c:\projects\php\x86
         PHP_INSTALL_DIR: c:\projects\php\x86\bin
         platform: x86
+        services: mssql2016
 
         
 # PHP_INSTALL_DIR is where the built PHP binaries go
@@ -66,10 +70,10 @@ image: Visual Studio 2015
 matrix:
   fast_finish: true
     
-services:
-  - mssql2016
-  - mssql2014
-  - mssql2012sp1
+#services:
+  #- mssql2016
+  #- mssql2014
+  #- mssql2012sp1
   
 # clone directory (or %APPVEYOR_BUILD_FOLDER%)
 clone_folder: c:\projects\sqlphp
