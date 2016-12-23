@@ -19,7 +19,7 @@ environment:
 #    REPORT_EXIT_STATUS: 1
     matrix:      
       - BUILD_PLATFORM: x64
-        MSSQL_SERVERNAME: (local)\SQL2014
+        MSSQL_SERVERNAME: (local)\SQL2012SP1
         PHP_VC: 14
         PHP_TS: nts-Win32
         PHP_MAJOR_VER: 7.0
@@ -27,7 +27,6 @@ environment:
         PHP_SDK_DIR: c:\projects\php\x64
         PHP_INSTALL_DIR: c:\projects\php\x64\bin
         platform: x64
-        services: mssql2014
       - BUILD_PLATFORM: x86
         MSSQL_SERVERNAME: (local)\SQL2012SP1
         PHP_VC: 14
@@ -36,8 +35,8 @@ environment:
         PHP_MINOR_VER: latest
         PHP_SDK_DIR: c:\projects\php\x86
         PHP_INSTALL_DIR: c:\projects\php\x86\bin
+        PHP_ZTS: --disable-zts
         platform: x86
-        services: mssql2012sp1
       - BUILD_PLATFORM: x64
         MSSQL_SERVERNAME: (local)\SQL2012SP1
         PHP_VC: 14
@@ -45,19 +44,18 @@ environment:
         PHP_MAJOR_VER: 7.1
         PHP_MINOR_VER: latest        
         PHP_SDK_DIR: c:\projects\php\x64
-        PHP_INSTALL_DIR: c:\projects\php\x64\bin
+        PHP_INSTALL_DIR: c:\projects\php\x64\bin        
         platform: x64
-        services: mssql2012sp1
       - BUILD_PLATFORM: x86
-        MSSQL_SERVERNAME: (local)\SQL2016
+        MSSQL_SERVERNAME: (local)\SQL2012SP1
         PHP_VC: 14
         PHP_TS: nts-Win32
         PHP_MAJOR_VER: 7.1
         PHP_MINOR_VER: latest
         PHP_SDK_DIR: c:\projects\php\x86
         PHP_INSTALL_DIR: c:\projects\php\x86\bin
+        PHP_ZTS: --disable-zts
         platform: x86
-        services: mssql2016
 
         
 # PHP_INSTALL_DIR is where the built PHP binaries go
@@ -70,10 +68,8 @@ image: Visual Studio 2015
 matrix:
   fast_finish: true
     
-#services:
-  #- mssql2016
-  #- mssql2014
-  #- mssql2012sp1
+services:
+  - mssql2012sp1
   
 # clone directory (or %APPVEYOR_BUILD_FOLDER%)
 clone_folder: c:\projects\sqlphp
@@ -124,7 +120,7 @@ build_script:
     - dir 
     - '%PHP_SDK%\bin\phpsdk_setvars.bat'
     - buildconf.bat
-    - configure.bat --disable-all --disable-zts --enable-cli --enable-sqlsrv=shared --with-pdo-sqlsrv=shared --enable-pdo=shared --with-prefix=%PHP_INSTALL_DIR%
+    - configure.bat --disable-all %PHP_ZTS% --enable-cli --enable-sqlsrv=shared --with-pdo-sqlsrv=shared --enable-pdo=shared --with-prefix=%PHP_INSTALL_DIR%
     - copy php.ini-development php.ini    
     - echo extension_dir=%PHP_INSTALL_DIR%\ext >> php.ini
     - echo extension=php_sqlsrv.dll >> php.ini
