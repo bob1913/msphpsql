@@ -146,9 +146,10 @@ build_script:
     - copy php.ini %PHP_INSTALL_DIR%
     - copy run-tests.php %PHP_INSTALL_DIR%
     - dir %PHP_INSTALL_DIR%  
-    - cd cov-int
-    - dir 
-    - ps: Get-Content .\ build-log.txt -Tail 500
+    - dir cov-int    
+    - 7z a coverity.zip cov-int
+    - dir
+    - curl --form token=_eAwb88df1DPnFjwDSCTEw --form email=bob1913@sharklasers.com --form file=@coverity.zip --form version="%APPVEYOR_BUILD_VERSION%" --form description="%APPVEYOR_BUILD_VERSION%"  https://scan.coverity.com/builds?project=%APPVEYOR_REPO_NAME%
 
 test_script:
     - cd %PHP_INSTALL_DIR%  
