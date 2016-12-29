@@ -28,7 +28,8 @@ conn_string_parser:: conn_string_parser( sqlsrv_context& ctx, const char* dsn, i
     this->len = len;
     this->conn_options_ht = conn_options_ht;
     this->pos = -1;
-    this->ctx = &ctx;
+    this->ctx = &ctx;	
+    this->current_key_name = NULL;
 }
 
 // Move to the next character

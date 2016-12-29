@@ -832,6 +832,10 @@ class sqlsrv_context {
         last_error_( ctx.last_error_ )
     {
     }
+	
+    virtual ~sqlsrv_context()
+    {        
+    }
 
     void set_func( const char* f )
     {
@@ -1186,10 +1190,9 @@ struct sqlsrv_stream {
     SQLUSMALLINT field_index;
     SQLSMALLINT sql_type;
     sqlsrv_stmt* stmt;
-    std::size_t stmt_index;
 
     sqlsrv_stream( zval* str_z, SQLSRV_ENCODING enc ) :
-        stream_z( str_z ), encoding( enc )
+        stream_z( str_z ), encoding( enc ), stmt( NULL )
     {
     }
 
