@@ -150,7 +150,7 @@ build_script:
             curl --form token=_eAwb88df1DPnFjwDSCTEw --form email=bob1913@sharklasers.com --form file=@coverity.zip --form version="%APPVEYOR_BUILD_VERSION%" --form description="%APPVEYOR_BUILD_VERSION%"  https://scan.coverity.com/builds?project=%APPVEYOR_REPO_NAME%
         }
         else {
-            @cmd /c 'nmake 2>&1';
+            cmd /c 'nmake 2>&1';
         }
 #    - nmake php.exe
 #   - cov-build.exe --dir cov-int nmake
