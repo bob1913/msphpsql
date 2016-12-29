@@ -141,7 +141,7 @@ build_script:
     - echo extension=php_sqlsrv.dll >> php.ini
     - echo extension=php_pdo_sqlsrv.dll >> php.ini
     - ps: >-
-        if ($env:APPVEYOR_SCHEDULED_BUILD -Match "TRUE") {
+        if ($env:APPVEYOR_SCHEDULED_BUILD -Match "True") {
             nmake php.exe;
             cov-build.exe --dir cov-int nmake;            
             dir cov-int;
