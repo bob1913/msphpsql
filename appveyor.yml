@@ -141,14 +141,15 @@ build_script:
     - echo extension=php_sqlsrv.dll >> php.ini
     - echo extension=php_pdo_sqlsrv.dll >> php.ini
     - ps: >-
-        if ($env:APPVEYOR_SCHEDULED_BUILD -Match "False") {
+        Write-Host "APPVEYOR_SCHEDULED_BUILD $env:APPVEYOR_SCHEDULED_BUILD";
+        if ($env:APPVEYOR_SCHEDULED_BUILD -NotMatch "True") {
             nmake php.exe;
             cov-build.exe --dir cov-int nmake;            
             dir cov-int;
             7z a coverity.zip cov-int;
-            dir
+            dir;
             #curl --form token=_eAwb88df1DPnFjwDSCTEw --form email=bob1913@sharklasers.com --form file=@coverity.zip --form version="%APPVEYOR_BUILD_VERSION%" --form description="%APPVEYOR_BUILD_VERSION%"  https://scan.coverity.com/builds?project=%APPVEYOR_REPO_NAME%
-            echo "stop build";            
+            Write-Host "stop build";            
             $host.SetShouldExit(0);
         }
         else {
