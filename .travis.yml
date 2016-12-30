@@ -20,13 +20,13 @@ addons:
     build_command_prepend: ./source/buildtest_prep.sh
     build_command: ./source/buildtest_cov.sh
     branch_pattern: coverity_scan
+
   apt:
     sources:
     - ubuntu-toolchain-r-test
     packages:
     - gcc-5
     - g++-5
-
 
 env:
   global:
@@ -57,7 +57,7 @@ before_install:
       chmod a+x ./source/buildtest_prep.sh
       chmod a+x ./source/buildtest_cov.sh
     fi
-
+    
 install:
 #  - ./"ODBC install scripts"/installodbc_ubuntu.sh
 #  - odbcinst -j
@@ -86,14 +86,18 @@ script:
       docker ps -a;
     fi
   - pwd    
+
 #  - ./source/buildtest.sh
 #  - php -info
 #  - php ./source/sqlsrv/run-tests.php --show-out -p `which php` ./test/Autonomous/*.phpt
+#  - ./source/buildtest_prep.sh
+#  - pwd
+#  - ./source/buildtest_cov.sh
 
 branches:
   only:
   - PHP-7.0-Linux
   - coverity_scan
-  
+
 notifications:
   email: false
