@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ev
 cd source
 BUILDDIR=$PWD
 echo $BUILDDIR
