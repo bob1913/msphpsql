@@ -40,6 +40,8 @@ before_install:
   - gcc --version
   - g++ --version
   - chmod a+x ./source/packagize.sh
+  - chmod a+x ./source/buildtest_prep.sh
+  - chmod a+x ./source/buildtest_cov.sh
 #  - chmod a+x ./source/buildtest.sh      
 #  - apt list --installed | grep odbc
 #  - sudo add-apt-repository "deb https://apt-mo.trafficmanager.net/repos/mssql-ubuntu-xenial-release/ xenial main"
@@ -75,14 +77,13 @@ script:
       docker stop client;
       docker ps -a;
     fi
-  - cd source && ./packagize.sh && cd ..
-  - pwd
 #  - ./source/buildtest.sh
 #  - php -info
 #  - php ./source/sqlsrv/run-tests.php --show-out -p `which php` ./test/Autonomous/*.phpt
-  - cd source/sqlsrv && phpize && ./configure && cd ../pdo_sqlsrv && phpize && ./configure && cd ../..
   - pwd
-  - cd source/sqlsrv && make && cd ../pdo_sqlsrv && make
+  - ./source/buildtest_prep.sh
+  - pwd
+  - ./source/buildtest_cov.sh
 
 branches:
   only:
