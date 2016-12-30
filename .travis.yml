@@ -12,6 +12,16 @@ services:
   - docker
 
 addons:
+  coverity_scan:
+
+    # GitHub project metadata
+    # ** specific to your project **
+    project:
+      name: bob1913/msphpsql
+      description: build msphpsql via Travis CI
+    build_command_prepend: ./source/buildtest_prep.sh
+    build_command: ./source/buildtest_cov.sh
+    branch_pattern: coverity_scan
   apt:
     sources:
     - ubuntu-toolchain-r-test
@@ -29,7 +39,6 @@ env:
   - SQLSERVERHOSTNAME=sql
  # COVERITY_SCAN_TOKEN
   - secure=_eAwb88df1DPnFjwDSCTEw
-  - COVERITY_SCAN_BRANCH=1
 
 
 before_install:
@@ -81,9 +90,9 @@ script:
 #  - php -info
 #  - php ./source/sqlsrv/run-tests.php --show-out -p `which php` ./test/Autonomous/*.phpt
   - pwd
-  - ./source/buildtest_prep.sh
-  - pwd
-  - ./source/buildtest_cov.sh
+#  - ./source/buildtest_prep.sh
+#  - pwd
+#  - ./source/buildtest_cov.sh
 
 branches:
   only:
