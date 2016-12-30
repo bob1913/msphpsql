@@ -75,11 +75,13 @@ script:
       docker stop client;
       docker ps -a;
     fi
-  - ./source/packagize.sh
+  - cd source && ./source/packagize.sh
+  - pwd
 #  - ./source/buildtest.sh
 #  - php -info
 #  - php ./source/sqlsrv/run-tests.php --show-out -p `which php` ./test/Autonomous/*.phpt
   - cd source/sqlsrv && phpize && configure cd ../pdo_sqlsrv && phpize && configure && cd ../..
+  - pwd
   - cd source/sqlsrv && make && cd ../pdo_sqlsrv && make
 
 branches:
