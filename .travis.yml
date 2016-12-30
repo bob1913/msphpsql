@@ -75,7 +75,7 @@ script:
       docker stop client;
       docker ps -a;
     fi
-  - cd source && ./source/packagize.sh
+  - cd source && ./packagize.sh && cd ..
   - pwd
 #  - ./source/buildtest.sh
 #  - php -info
