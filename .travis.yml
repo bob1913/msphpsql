@@ -16,6 +16,7 @@ addons:
     project:
       name: bob1913/msphpsql
       description: build msphpsql via Travis CI
+    notification_email: bob1913@sharklasers.com
     build_command_prepend: ./source/buildtest_prep.sh
     build_command: ./source/buildtest_cov.sh
     branch_pattern: coverity_scan
