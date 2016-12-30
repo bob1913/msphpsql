@@ -11,11 +11,20 @@ php:
 services:
   - docker
 
+env:
+  global:
+  - mssql_jdbc_test_connection_properties='jdbc:sqlserver://localhost:1433;databaseName=master;username=sa;password=<YourStrong!Passw0rd>;'
+  - COMPILER=g++-5
+  - REPORT_EXIT_STATUS=1
+  - ACCEPT_EULA=Y
+  - PHPSQLDIR=/REPO/msphpsql-PHP-7.0-Linux
+  - SQLSERVERHOSTNAME=sql
+  - coverity_branch=coverity_scan
+ # COVERITY_SCAN_TOKEN
+   - secure: "rtgzTzGo4v8nG46izBEaj8ynz09WajPkrkWf3zlCWxSIn2v8ag9QpGOusnenFKBr1WJBdZDvZMHfvvIbCWCyGwhvdHkJEHIrTJ31icE3lyWLra2qvrFAmsyeq18qX0ZFGxhxK+wdF8w9Asm20hKsucliQVBQSXMCcglSfYndF/D7tuLbPu+uLW2bC/2tozwPQMHjNDU3oj3Xkc8GjcjxmwjOpvmbgM4HVMuCRGFtg0afonl8uwTZifG6Mwyx/zoF218HjF4lTxYwwu8HgYM6TdZdxgM7ofkPtP0+ef0TZGLd2DIrDqJtvy6HWudtwuC8/h4UaHEiW8p5HAlpfgntP03ugZLdbumSdIXa2X7ABkoqyRNnOsnKxDNvdk8P9h+W9bty/Frd/7zN0Ln3h6E1dWEI9GrPqBUcteN5+Ur6UIZ+DfPp4qGVcn+0hE/JmBKwGWTQS3noN9tbchUgai2qmMya3H3swmsHo2KHu0Mz5u/jPf1l2DdnmDv4WPkp3Btfpewibk1jIBcIb/XRzshaQQtSAkIjPMwXyotamKyz9ww/h6SXd9dqOxnafxaeFtDN02G2+eU680JeHwfcHfEeo3yMEvFfBLtTpc1dpZ6JZ7cXwqtQnj7j0TwdT0TPPZFEdE0F4TmQQbhJb2dQmnANtQfGpD9UxJfmkCIetsSo01I="
+
 addons:
   coverity_scan:
-
-    # GitHub project metadata
-    # ** specific to your project **
     project:
       name: bob1913/msphpsql
       description: build msphpsql via Travis CI
@@ -29,20 +38,9 @@ addons:
     - gcc-5
     - g++-5
 
-env:
-  global:
-  - mssql_jdbc_test_connection_properties='jdbc:sqlserver://localhost:1433;databaseName=master;username=sa;password=<YourStrong!Passw0rd>;'
-  - COMPILER=g++-5
-  - REPORT_EXIT_STATUS=1
-  - ACCEPT_EULA=Y
-  - PHPSQLDIR=/REPO/msphpsql-PHP-7.0-Linux
-  - SQLSERVERHOSTNAME=sql
- # COVERITY_SCAN_TOKEN
-  - secure=_eAwb88df1DPnFjwDSCTEw
-
-
 before_install:
   - php --ini
+  - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 1
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 1
@@ -57,7 +55,7 @@ before_install:
 #  - sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
 #  - sudo apt-get update
 #  - sudo apt-get install -y msodbcsql unixodbc-dev-utf16
-  - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then docker pull microsoft/mssql-server-linux ; fi
+  - if [ "${$TRAVIS_BRANCH}" != "$coverity_branch" ]; then docker pull microsoft/mssql-server-linux ; fi
  
 install:
 #  - ./"ODBC install scripts"/installodbc_ubuntu.sh
@@ -66,7 +64,7 @@ install:
 #  - ldconfig -p | grep odbc
 #  - sqlcmd -?
   - |
-    if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then 
+    if [ "$TRAVIS_BRANCH" != "$coverity_branch" ]; then 
       docker build --build-arg PHPSQLDIR=$PHPSQLDIR -t msphpsql-dev -f Dockerfile-msphpsql .;
       docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=<YourStrong!Passw0rd>' -p 1433:1433 --name=$SQLSERVERHOSTNAME -d microsoft/mssql-server-linux;
     fi
@@ -77,7 +75,7 @@ before_script:
 
 script: 
   - |
-    if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then
+    if [ "$TRAVIS_BRANCH" != "$coverity_branch" ]; then
       docker run -e TRAVIS_JOB_ID -t -d -w $PHPSQLDIR --link $SQLSERVERHOSTNAME --name=client msphpsql-dev;
       docker ps -a;
       docker exec client php ./source/pdo_sqlsrv/run-tests.php ./test/pdo_sqlsrv/*.phpt;
