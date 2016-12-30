@@ -1,5 +1,5 @@
 #!/bin/bash
-BUILDDIR=$PWD/src
+BUILDDIR=$PWD/source
 echo $BUILDDIR
 cd $BUILDDIR
 /bin/bash packagize.sh
