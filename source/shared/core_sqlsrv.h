@@ -862,6 +862,10 @@ class sqlsrv_context {
     {
     }
 
+    virtual ~sqlsrv_context()
+    {        
+    }
+
     void set_func( const char* f )
     {
         name_ = f;
@@ -1199,10 +1203,9 @@ struct sqlsrv_stream {
     SQLUSMALLINT field_index;
     SQLSMALLINT sql_type;
     sqlsrv_stmt* stmt;
-    std::size_t stmt_index;
 
     sqlsrv_stream( zval* str_z, SQLSRV_ENCODING enc ) :
-        stream_z( str_z ), encoding( enc )
+        stream_z( str_z ), encoding( enc ), stmt( NULL )
     {
     }
 
@@ -2292,7 +2295,7 @@ namespace core {
     inline void sqlsrv_zend_hash_add( sqlsrv_context& ctx, HashTable* ht, zend_string* key, unsigned int key_len, zval* data, 
                                       unsigned int data_size, zval* pDest TSRMLS_DC )
     {
-        int zr = (pDest = ::zend_hash_add(ht, key, data)) != NULL ? SUCCESS : FAILURE;
+        int zr = ::zend_hash_add(ht, key, data) != NULL ? SUCCESS : FAILURE;
         CHECK_ZEND_ERROR( zr, ctx, SQLSRV_ERROR_ZEND_HASH ) {
             throw CoreException();
         }

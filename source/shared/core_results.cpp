@@ -386,7 +386,8 @@ sqlsrv_buffered_result_set::sqlsrv_buffered_result_set( sqlsrv_stmt* stmt TSRMLS
     meta(NULL),
     current(0),
     last_field_index(-1),
-    read_so_far(0)
+    read_so_far(0),
+    temp_length(0)
 {
     // 10 is an arbitrary number for now for the initial size of the cache
     ALLOC_HASHTABLE( cache );
