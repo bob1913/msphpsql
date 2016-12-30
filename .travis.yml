@@ -1,23 +1,32 @@
 sudo: required
 
-#language: php  
+language: php  
 #compiler: gcc
 os: linux
 dist: trusty
 
-#php:
-#  - '7.0'
+php:
+  - '7.0'
 
 services:
   - docker
 
-#addons:
-#  apt:
-#    sources:
-#    - ubuntu-toolchain-r-test
-#    packages:
-#    - gcc-5
-#    - g++-5
+addons:
+  coverity_scan:
+    project:
+      name: bob1913/msphpsql
+      description: build msphpsql via Travis CI
+    notification_email: bob1913@sharklasers.com
+    build_command_prepend: ./source/buildtest_prep.sh
+    build_command: ./source/buildtest_cov.sh
+    branch_pattern: coverity_scan
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-5
+    - g++-5
+
 
 env:
   global:
@@ -27,44 +36,56 @@ env:
   - ACCEPT_EULA=Y
   - PHPSQLDIR=/REPO/msphpsql-PHP-7.0-Linux
   - SQLSERVERHOSTNAME=sql
+  - coverity_branch=coverity_scan
+ # COVERITY_SCAN_TOKEN
+  - secure: "rtgzTzGo4v8nG46izBEaj8ynz09WajPkrkWf3zlCWxSIn2v8ag9QpGOusnenFKBr1WJBdZDvZMHfvvIbCWCyGwhvdHkJEHIrTJ31icE3lyWLra2qvrFAmsyeq18qX0ZFGxhxK+wdF8w9Asm20hKsucliQVBQSXMCcglSfYndF/D7tuLbPu+uLW2bC/2tozwPQMHjNDU3oj3Xkc8GjcjxmwjOpvmbgM4HVMuCRGFtg0afonl8uwTZifG6Mwyx/zoF218HjF4lTxYwwu8HgYM6TdZdxgM7ofkPtP0+ef0TZGLd2DIrDqJtvy6HWudtwuC8/h4UaHEiW8p5HAlpfgntP03ugZLdbumSdIXa2X7ABkoqyRNnOsnKxDNvdk8P9h+W9bty/Frd/7zN0Ln3h6E1dWEI9GrPqBUcteN5+Ur6UIZ+DfPp4qGVcn+0hE/JmBKwGWTQS3noN9tbchUgai2qmMya3H3swmsHo2KHu0Mz5u/jPf1l2DdnmDv4WPkp3Btfpewibk1jIBcIb/XRzshaQQtSAkIjPMwXyotamKyz9ww/h6SXd9dqOxnafxaeFtDN02G2+eU680JeHwfcHfEeo3yMEvFfBLtTpc1dpZ6JZ7cXwqtQnj7j0TwdT0TPPZFEdE0F4TmQQbhJb2dQmnANtQfGpD9UxJfmkCIetsSo01I="
+
 
 before_install:
-#  - php --ini
-#  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5
-#  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 1
-#  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 1
-#  - gcc --version
-#  - g++ --version
-#  - chmod a+x ./source/packagize.sh
-#  - chmod a+x ./source/buildtest.sh      
-#  - apt list --installed | grep odbc
-#  - sudo add-apt-repository "deb https://apt-mo.trafficmanager.net/repos/mssql-ubuntu-xenial-release/ xenial main"
-#  - sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
-#  - sudo apt-get update
-#  - sudo apt-get install -y msodbcsql unixodbc-dev-utf16
-  - docker pull microsoft/mssql-server-linux
- 
+  - |
+    if [ "$TRAVIS_BRANCH" != "$coverity_branch" ]; then 
+      docker pull microsoft/mssql-server-linux ; 
+    else
+      php --ini 
+      echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+      sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5
+      sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 1
+      sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 1
+      gcc --version
+      g++ --version
+      chmod a+x ./source/packagize.sh
+      chmod a+x ./source/buildtest_prep.sh
+      chmod a+x ./source/buildtest_cov.sh
+    fi
+
 install:
 #  - ./"ODBC install scripts"/installodbc_ubuntu.sh
 #  - odbcinst -j
 #  - odbcinst -q -d -n "ODBC Driver 13 for SQL Server"
 #  - ldconfig -p | grep odbc
 #  - sqlcmd -?
-  - docker build --build-arg PHPSQLDIR=$PHPSQLDIR -t msphpsql-dev -f Dockerfile-msphpsql .
-  - docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=<YourStrong!Passw0rd>' -p 1433:1433 --name=$SQLSERVERHOSTNAME -d microsoft/mssql-server-linux
-
+  - |
+    if [ "$TRAVIS_BRANCH" != "$coverity_branch" ]; then 
+      docker build --build-arg PHPSQLDIR=$PHPSQLDIR -t msphpsql-dev -f Dockerfile-msphpsql .;
+      docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=<YourStrong!Passw0rd>' -p 1433:1433 --name=$SQLSERVERHOSTNAME -d microsoft/mssql-server-linux;
+    fi
+    
 before_script:
 #  - echo "extension = pdo_sqlsrv.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 #  - echo "extension = sqlsrv.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 script: 
-  - docker run -e TRAVIS_JOB_ID -t -d -w $PHPSQLDIR --link $SQLSERVERHOSTNAME --name=client msphpsql-dev
-  - docker ps -a 
-  - docker exec client php ./source/pdo_sqlsrv/run-tests.php ./test/pdo_sqlsrv/*.phpt
-  - docker exec client php ./source/sqlsrv/run-tests.php ./test/sqlsrv/*.phpt
-  - docker exec client coveralls -e ./source/shared/ --gcov-options '\-lp'
-  - docker stop client
-  - docker ps -a 
+  - |
+    if [ "$TRAVIS_BRANCH" != "$coverity_branch" ]; then
+      docker run -e TRAVIS_JOB_ID -t -d -w $PHPSQLDIR --link $SQLSERVERHOSTNAME --name=client msphpsql-dev;
+      docker ps -a;
+      docker exec client php ./source/pdo_sqlsrv/run-tests.php ./test/pdo_sqlsrv/*.phpt;
+      docker exec client php ./source/sqlsrv/run-tests.php ./test/sqlsrv/*.phpt;
+      docker exec client coveralls -e ./source/shared/ --gcov-options '\-lp' ;
+      docker stop client;
+      docker ps -a;
+    fi
+  - pwd    
 #  - ./source/buildtest.sh
 #  - php -info
 #  - php ./source/sqlsrv/run-tests.php --show-out -p `which php` ./test/Autonomous/*.phpt
@@ -72,6 +93,7 @@ script:
 branches:
   only:
   - PHP-7.0-Linux
-
+  - coverity_scan
+  
 notifications:
   email: false

@@ -1205,11 +1205,11 @@ struct sqlsrv_stream {
     sqlsrv_stmt* stmt;
 
     sqlsrv_stream( zval* str_z, SQLSRV_ENCODING enc ) :
-        stream_z( str_z ), encoding( enc ), stmt( NULL )
+        stream_z( str_z ), encoding( enc ), field_index( 0 ), sql_type( SQL_UNKNOWN_TYPE ), stmt( NULL )
     {
     }
 
-    sqlsrv_stream() : stream_z( NULL ), encoding( SQLSRV_ENCODING_INVALID ), stmt( NULL )
+    sqlsrv_stream() : stream_z( NULL ), encoding( SQLSRV_ENCODING_INVALID ), field_index( 0 ), sql_type( SQL_UNKNOWN_TYPE ), stmt( NULL )
     {
     }
 };
