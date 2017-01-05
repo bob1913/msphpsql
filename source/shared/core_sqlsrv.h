@@ -1030,6 +1030,8 @@ struct sqlsrv_conn : public sqlsrv_context {
     sqlsrv_conn( SQLHANDLE h, error_callback e, void* drv, SQLSRV_ENCODING encoding  TSRMLS_DC ) :
         sqlsrv_context( h, SQL_HANDLE_DBC, e, drv, encoding )
     {
+        server_version = SERVER_VERSION_UNKNOWN;
+        driver_version = ODBC_DRIVER_13; 
     }
 
     // sqlsrv_conn has no destructor since its allocated using placement new, which requires that the destructor be 
